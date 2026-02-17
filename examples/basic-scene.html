@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Three.js AI Scene Generator - Example</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      max-width: 300px;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <strong>Example Scene</strong><br>
+    <small>Generated with AI-powered DSL</small><br><br>
+    <strong>Controls:</strong><br>
+    • Left click + drag to rotate<br>
+    • Right click + drag to pan<br>
+    • Scroll to zoom
+  </div>
+  
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+  </script>
+  
+  <script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+
+// Create scene
+const scene = new THREE.Scene();
+scene.background = new THREE.Color('#1a1a2e');
+
+// Create camera
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
+camera.position.set(5, 5, 10);
+camera.lookAt(0, 0, 0);
+
+// Add lights
+const ambientLight0 = new THREE.AmbientLight('#ffffff', 0.4);
+scene.add(ambientLight0);
+
+const directionalLight1 = new THREE.DirectionalLight('#ffffff', 0.8);
+directionalLight1.position.set(5, 10, 7.5);
+scene.add(directionalLight1);
+
+// Add objects
+// Red cube
+const geometry0 = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+const material0 = new THREE.MeshStandardMaterial({ 
+  color: '#ff0000',
+  metalness: 0.3,
+  roughness: 0.4
+});
+const mesh0 = new THREE.Mesh(geometry0, material0);
+mesh0.position.set(-2, 1, 0);
+mesh0.rotation.set(0, 0.785, 0);
+mesh0.scale.set(1, 1, 1);
+scene.add(mesh0);
+
+// Blue sphere
+const geometry1 = new THREE.SphereGeometry(1, 32, 32);
+const material1 = new THREE.MeshStandardMaterial({ 
+  color: '#0066ff',
+  metalness: 0.7,
+  roughness: 0.2
+});
+const mesh1 = new THREE.Mesh(geometry1, material1);
+mesh1.position.set(2, 1.5, 0);
+mesh1.scale.set(1, 1, 1);
+scene.add(mesh1);
+
+// Green plane (ground)
+const geometry2 = new THREE.PlaneGeometry(15, 15);
+const material2 = new THREE.MeshStandardMaterial({ 
+  color: '#00ff88',
+  metalness: 0.1,
+  roughness: 0.8
+});
+const mesh2 = new THREE.Mesh(geometry2, material2);
+mesh2.position.set(0, 0, 0);
+mesh2.rotation.set(-Math.PI / 2, 0, 0);
+mesh2.scale.set(1, 1, 1);
+scene.add(mesh2);
+
+// Create renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(window.devicePixelRatio);
+document.body.appendChild(renderer.domElement);
+
+// Add orbit controls
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+
+// Handle window resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Animation loop
+function animate() {
+  requestAnimationFrame(animate);
+  
+  // Rotate objects for visual interest
+  mesh0.rotation.y += 0.01;
+  mesh1.rotation.y += 0.005;
+  
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+animate();
+  </script>
+</body>
+</html>
